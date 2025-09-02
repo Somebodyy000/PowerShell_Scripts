@@ -11,7 +11,7 @@ function Print-AsciiArt {
 
 Print-AsciiArt
 
-$text = "Hi! We're Some Future. If you have this file in your machine that means you're not being careful enough with what you open from the internet. We advise you to learn more about how to protect yourself before downloading anything from the internet."
+$text = "Long ass text here."
 $infoFilePath = "stolen_info.txt"
 
 del $infoFilePath
