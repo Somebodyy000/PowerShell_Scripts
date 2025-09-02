@@ -93,7 +93,7 @@ Write-Host "Running Services completed."
 "" | Out-File $ReportPath -Append
 
 try {
-    Get-WinEvent -LogName Microsoft-Windows-PowerShell/Operational |
+    Get-WinEvent -LogName Microsoft-Windows-PowerShell/Operational -MaxEvents 150 |
     Where-Object {$_.Id -eq 4104} |
     Select-Object TimeCreated, Id, Message |
     Format-Table -AutoSize | Out-String | Out-File $ReportPath -Append
@@ -110,10 +110,13 @@ Write-Host "PowrShell Script Block Execution completed."
 "" | Out-File $ReportPath -Append
 
 try {
-    Get-WinEvent -LogName Security |
-    Where-Object {$_.Id -eq 4688 -and $_.Message -match "powershell"} |
-    Select-Object TimeCreated, Id, Message |
-    Format-Table -AutoSize | Out-String | Out-File $ReportPath -Append
+    $PowershellProcesses = Get-WinEvent -FilterHashtable @{LogName='Security'; Id=4688} -MaxEvents 150 | Where-Object { $_.Message -match "powershell" }
+
+    if ($PowershellProcesses) {
+        $PowershellProcesses | Select-Object TimeCreated, Id, Message | Format-Table -AutoSize | Out-String | Out-File $ReportPath -Append
+    } else {
+        "No Security log for Powershell processes found." | Out-File $ReportPath -Append
+    }
 } catch { 
     "Failed to read Security logs for PowerShell processes." | Out-File $ReportPath -Append 
 }
@@ -131,7 +134,7 @@ Write-Host "PowerShell Process Creation completed."
 $cloudDomains = "dropbox","yandex","pcloud"
 
 try {
-    $events = Get-WinEvent -LogName Security -MaxEvents 1000 -ErrorAction Stop
+    $events = Get-WinEvent -LogName Security -MaxEvents 100 -ErrorAction Stop
 } catch {
     Write-Host "Failed to query Security log: $_"
     "Failed to query Security log: $_" | Out-File $ReportPath -Append
