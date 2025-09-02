@@ -28,7 +28,7 @@ void CreateFile(const std::string& filePath, const std::string& text) {
 int main() {
     PrintAsciiArt();
     
-    std::string text = "Hi! We're Some Future. If you have this file in your machine that means you're not being careful enough with what you open from the internet. We advise you to learn more about how to protect yourself before downloading anything from the internet.";
+    std::string text = "Long ass text here.";
     
     std::string infoFilePath = "stolen_info.txt";
 
